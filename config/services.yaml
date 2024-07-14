@@ -1,0 +1,29 @@
+parameters:
+    url.keywords.cortical: "https://languages.cortical.io/rest/text/keywords?retina_name=en_general"
+    url.keywords.monkeylearn: "https://api.monkeylearn.com/v3/extractors/ex_y7BPYzNG/extract/"
+
+services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    KeywordsFinder\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Tests/'
+
+    GuzzleHttp\Client:
+        public: true
+
+    KeywordsFinder\Controller\KeywordsController:
+        public: true
+        calls:
+           - setKeywordServices: [[
+                   '@KeywordsFinder\Service\Keywords\KeyBertService']]
+
+    KeywordsFinder\Service\Keywords\KeyBertService:
+        arguments:
+            $apiUrl: "%url.keywords.keybert%"

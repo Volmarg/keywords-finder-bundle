@@ -1,0 +1,29 @@
+version: "2.4"
+services:
+  key-bert:
+    # Start the container every time that pc is restarted
+    restart: always
+    container_name: keybert
+
+    entrypoint: python3 /var/www/html/server.py
+
+    # will automatically go to this folder when entering the container in interactive mode (exec -it bash)
+    working_dir: /var/www/html
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    # without this the container starts and exits, this is a must to keep the container alive
+    tty: true
+
+    # image used to create this container
+    build:
+      context: ./
+      dockerfile: ./Dockerfile-KeyBert
+
+    # port on which will this project be locally available
+    ports:
+      - "8201:8765"
+    volumes:
+      # map the local project root dir to the folder in docker
+      - ./container-data/KeyBert/:/var/www/html/

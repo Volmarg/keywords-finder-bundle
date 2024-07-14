@@ -1,0 +1,2 @@
+parameters:
+  url.keywords.keybert: "http://host.docker.internal:8201"

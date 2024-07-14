@@ -1,0 +1,27 @@
+FROM ubuntu:jammy
+
+# Required else the ubuntu installation qill ask for timezone in interactive mode
+ARG DEBIAN_FRONTEND=noninteractive;
+
+# `apt-get update` is requirement to be able to install any packages at all, it mustt be called first and MUST be chained
+# with some `apt-get` afterwards, as it's some known docker caching issue.
+RUN     yes | apt-get update \
+    &&  yes | apt-get install software-properties-common \
+    &&  yes | apt-get install nano \
+    &&  yes | apt-get install wget \
+    &&  yes | apt-get install iputils-ping \
+    &&  yes | apt-get install curl;
+
+# Install python
+RUN yes | apt-get install python2;
+RUN yes | apt-get install python3;
+RUN yes | apt-get install python3-pip;
+RUN yes | apt-get install python3-icu;
+
+# Install KeyBERT
+## DON'T YOU DARE TO CHANGE ANY SINGLE LINE BEFORE HERE, DON'T CHANGE INSTALL TOO
+### It takes forever to install keyBert so once it's cached it should stay this way!
+RUN pip install keybert;
+
+# python server
+EXPOSE 8765
